@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    surrounded (0.9.9)
+      triad (~> 0.2.2)
+    thread_safe (0.3.5)
+    triad (0.2.2)
+      thread_safe (~> 0.3.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  surrounded
+
+BUNDLED WITH
+   1.10.6
