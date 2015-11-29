@@ -1,7 +1,18 @@
 require 'surrounded'
 
 class User
+  attr_reader :name
+  def initialize name
+    @name = name
+  end
   def self.find id
+  end
+  def fed_up?
+    # returns a random boolean value
+    [true, false].sample
+  end
+  def say something
+    puts something
   end
 end
 
@@ -9,6 +20,11 @@ class Employment
   extend Surrounded::Context
 
   keyword_initialize :employee, :boss
+
+  def plan_weekend_work
+    employee.work_weekend
+  end
+  trigger :plan_weekend_work
 
   role :boss
 
@@ -32,6 +48,7 @@ class Employment
   end
 end
 
-user1 = User.find(1)
-user2 = User.find(2)
+user1 = User.new("Edward")
+user2 = User.new("Bob")
 context = Employment.new(employee: user1, boss: user2)
+context.plan_weekend_work
