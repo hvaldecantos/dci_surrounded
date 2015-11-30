@@ -17,6 +17,15 @@ class Accounting
     print_report debtors
   end
 
+  trigger :print_balance do
+    debtors = participant.compute_debtors
+    creditors = participant.compute_creditors
+    balance = debtors.merge(creditors).inject({}){|h, (k,v)| h.merge( k => {name: v[:name], amount: 0.0} ) }
+    balance = balance.merge(debtors).merge(creditors) {|user, deb, cred| {name: deb[:name], amount: deb[:amount] - cred[:amount]} }
+    puts "- #{participant.name} balance statement"
+    print_report balance
+  end
+
   def print_report participants
     participants.each {|k,v| puts "id: %-3d user: %-8s amount: %5.2f" % [k, v[:name], v[:amount]] }
   end
