@@ -33,8 +33,8 @@ class Accounting
   role :participant do
     def compute_debtors
       debtors = {}
-      paid_expenses.each do |e|
-        e.shares.each do |s|
+      payments.each do |p|
+        p.expense.shares.each do |s|
           next if s.user == self
           debtors[s.user.id] ||= { name: "", amount: 0.0 }
           debtors[s.user.id][:name] = s.user.name
@@ -46,11 +46,13 @@ class Accounting
 
     def compute_creditors
       creditors = {}
-      shared_expenses.each do |e|
-        next if e.user == self
-        creditors[e.user.id] ||= { name: "", amount: 0.0 }
-        creditors[e.user.id][:name] = e.user.name
-        creditors[e.user.id][:amount] += e.shares.select{ |share| share.user == self }.first.amount
+      Payment.where('user_id != ?', self.id).each do |p|
+        p.expense.shares.each do |s|
+          next if s.user != self
+          creditors[p.user.id] ||= { name: "", amount: 0.0 }
+          creditors[p.user.id][:name] = p.user.name
+          creditors[p.user.id][:amount] += s.amount
+        end
       end
       creditors
     end
