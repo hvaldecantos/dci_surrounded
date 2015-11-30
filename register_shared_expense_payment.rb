@@ -15,7 +15,7 @@ class RegisterSharedExpensePayment
 
   role :payer do
     def create_expense
-      expense = Expense.find_or_create_by(description: expense_description)
+      expense = Expense.create(description: expense_description)
     end
     def register_payment expense
       payments.create(expense: expense)
