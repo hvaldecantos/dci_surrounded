@@ -2,15 +2,27 @@ require 'surrounded'
 require './user'
 require './expense'
 
-class RegisterSharedExpensePayment
+class RegisterPayment
   extend Surrounded::Context
 
-  keyword_initialize :payer, :participants, :expense_description, :total_amount
+  keyword_initialize :payer, :participants, :receiver, :expense_description, :total_amount
 
-  trigger :start do
+  def initialize opts
+    opts[:participants] ||= ""
+    opts[:expense_description] ||= ""
+    opts[:receiver] ||= ""
+    map_roles(payer: opts[:payer], participants: opts[:participants], expense_description: opts[:expense_description], total_amount: opts[:total_amount], receiver: opts[:receiver])
+  end
+
+  trigger :make_shared_expense_payment do
     expense = payer.create_expense
     participants.split expense
     payer.register_payment expense
+  end
+
+  trigger :payback do
+    map_roles(participants: [receiver].flatten, expense_description: "Payback")
+    make_shared_expense_payment
   end
 
   role :payer do
