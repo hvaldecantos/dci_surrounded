@@ -18,4 +18,6 @@ p Expense.all
 p Share.all
 p Payment.all
 
-Accounting.new(creditor: adele).print_debtors
+Accounting.new(participant: adele).print_debtors
+puts "-------------------------------------------"
+Accounting.new(participant: adele).print_creditors
