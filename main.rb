@@ -25,3 +25,5 @@ RegisterSharedExpensePayment.new(payer: dan, participants: [alan], expense_descr
 Accounting.new(participant: adele).print_balance
 Accounting.new(participant: dan).print_balance
 Accounting.new(participant: alan).print_balance
+
+Accounting.new(participant: adele).print_payments_report

@@ -26,6 +26,10 @@ class Accounting
     print_report balance
   end
 
+  trigger :print_payments_report do
+    participant.show_report
+  end
+
   def print_report participants
     participants.each {|k,v| puts "id: %-3d user: %-8s amount: %5.2f" % [k, v[:name], v[:amount]] }
   end
@@ -55,6 +59,16 @@ class Accounting
         end
       end
       creditors
+    end
+
+    def show_report
+      puts "- Payments related to #{self.name}"
+      Payment.all.each do |p|
+        p.expense.shares.each do |s|
+          next if (self != p.user and self != s.user) or (p.user == s.user)
+          puts "payer: %-8s receiver: %-8s %-10s $%5.2f" % [p.user.name, s.user.name, p.expense.description, s.amount]
+        end
+      end
     end
   end
 
